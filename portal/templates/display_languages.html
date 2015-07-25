@@ -1,0 +1,5 @@
+{% for language in languages %}
+    <span class="label label-info"><strong>{{ language.name }}</strong></span>
+    {% else %}
+    <p>There aren't any languages!</p>
+{% endfor %}

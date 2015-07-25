@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Your social platform</title>  
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
+        <meta name="viewport" content = "width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="container">
+            <div class="header clearfix">
+		        <nav>
+		            <ul class="nav nav-pills pull-right">
+			            <li role="presentation"><a href="/">Home</a></li>
+			            {% if session.email %}
+			                <li role="presentation"><a href="{{ url_for('profile', username=session.username) }}">Profile</a></li>
+			                <li role="presentation"><a href="/logout">Logout</a></li>
+			            {% else %}
+			                <li role="presentation"><a href="/register">Register</a></li>
+			                <li role="presentation"><a href="/login">Login</a></li>
+			            {% endif %}
+		            </ul>
+		        </nav>
+		        <h3 class="text-muted">Your social platform</h3>
+		    </div>
+            {% block body %}{% endblock %}
+        </div>
+    </body>
+</html>

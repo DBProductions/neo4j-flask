@@ -1,0 +1,10 @@
+body {
+    padding-top: 10px;
+}
+.box {
+    padding: 40px 15px;
+    text-align: center;
+}
+span.label.label-info a {
+	color: #fff;
+}

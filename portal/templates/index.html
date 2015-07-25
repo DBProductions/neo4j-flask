@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="row">
+    {% if session.email %}
+        <div class="col-md-offset-1 col-md-7">
+            <h2>Last projects</h2>
+            {% include "display_projects.html" %}
+        </div>
+    {% else %}
+        <div class="col-md-offset-1 col-md-7">
+            <h1>Welcome</h1>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
