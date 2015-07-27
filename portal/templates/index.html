@@ -1,14 +1,19 @@
 {% extends "layout.html" %}
 {% block body %}
+<h2 class="col-md-offset-1">Overview</h2>
 <div class="row">
     {% if session.email %}
         <div class="col-md-offset-1 col-md-7">
-            <h2>Last projects</h2>
+            <h3>Last projects</h3>
             {% include "display_projects.html" %}
+        </div>
+        <div class="col-md-4">
+            <h3>Users</h3>
+            {% include "display_users.html" %}
         </div>
     {% else %}
         <div class="col-md-offset-1 col-md-7">
-            <h1>Welcome</h1>
+            <h3>Welcome</h3>
         </div>
     {% endif %}
 </div>

@@ -46,6 +46,16 @@ def get_last_projects():
 
     return graph.cypher.execute(query, today=date())
 
+def get_users():
+    query = """
+    MATCH (user:User)-[:PUBLISHED]->(project:Project)
+    RETURN user.username AS username
+    ORDER BY username DESC
+    LIMIT 5
+    """
+
+    return graph.cypher.execute(query, today=date())
+
 def get_project_likes(project):
     query = """
     MATCH (user:User)-[:LIKED]->(project:Project)
@@ -96,17 +106,14 @@ class User:
     def __init__(self, email=None, username=None):
         self.email = email
         self.username = username
-        print self.email, self.username
 
     def find(self):
         user = None
         if self.email:
             user = graph.find_one("User", "email", self.email)
-            print user
             #self.username = user['username']
         elif self.username:
             user = graph.find_one("User", "username", self.username)
-            print user
             self.email = user['email']
         return user
 

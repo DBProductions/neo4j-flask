@@ -18,10 +18,10 @@
             {% endif %}
             <br>
             <div class="pull-right">                
-                {{ ', '.join(project.tags) }}
+                <small>{{ ', '.join(project.tags) }}</small>
             </div>
         </div>
     </div>
     {% else %}
-    <div><strong>There aren't any projects yet!</strong></div>
+    <div>There aren't any projects yet!</div>
 {% endfor %}

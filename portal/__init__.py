@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from models import User, Language, get_last_projects, get_users_projects, get_project_likes, get_all_languages, get_users_languages
+from models import User, Language, get_last_projects, get_users, get_users_projects, get_project_likes, get_all_languages, get_users_languages
 from flask import Flask, request, redirect, session, abort, url_for, render_template
 
 app = Flask(__name__)
@@ -7,7 +7,9 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     projects = get_last_projects()
-    return render_template('index.html', projects=projects)
+    users = get_users()
+    print users
+    return render_template('index.html', projects=projects, users=users)
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -88,25 +90,14 @@ def profile(username):
 
     all_languages = get_all_languages(email)
     languages = get_users_languages(email)
-    projects = get_users_projects(email)    
-
-    for i in projects:
-        likes = get_project_likes(i.id)
-        r = likes[0]
-        i.likes = int(r['likes'])
-        print i.likes
-        print int(r['likes'])
-
-    print projects
+    projects = get_users_projects(email)
 
     similar = []
     common = []
 
     viewer_email = session.get('email')
-
     if viewer_email:
         viewer = User(viewer_email)
-
         if viewer.email == email:
             similar = viewer.get_similar_users()
         else:

@@ -1,7 +1,7 @@
 # neo4j-flask
 
 A social application written in Python powered by Flask and Neo4j.  
-It's an copy/extension of neo4j-flask: https://github.com/nicolewhite/neo4j-flask  
+It's a copy/extension of neo4j-flask: https://github.com/nicolewhite/neo4j-flask  
 
 ## Getting started
 
@@ -13,7 +13,7 @@ You must have git, python and pip installed.
 
 ### Clone repository
 
-Clone the `angularjs-starter-app` repository.
+Clone the `neo4j-flask` repository.
 
     $ git clone git@github.com:DBProductions/neo4j-flask.git
     $ cd neo4j-flask
