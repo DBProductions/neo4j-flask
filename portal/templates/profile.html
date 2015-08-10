@@ -4,26 +4,28 @@
 {% if session.email %}
 <div class="row">    
     <div class="col-md-offset-1 col-md-7">
+        <h3>Languages:</h3>
+        {% include "display_languages.html" %}        
         {% if session.username == username %}
             <h3>Users similar to you:</h3>
             {% for user in similar %}
                 <p><a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a> also tags about <i>{{ ', '.join(user.tags) }}</i></p>
             {% else %}
                 <p>There aren't any users who've set the same tags as you!</p>
-            {% endfor %}
-            <h3>Your languages:</h3>
-            {% include "display_languages.html" %}
-            <h3>Your projects:</h3>
-            {% include "display_projects.html" %}
+            {% endfor %}            
         {% else %}
-            <p>{{ username }} has liked {{ common.likes }} of your projects and
-            {% if common.tags %}
-                also blogs about <i>{{ ', '.join(common.tags) }}</i>
-            {% else %}
-                hasn't blogged about any of the same tags
-            {% endif %}
-            </p>
+            <br><br>
+            <div>{{ username }} has liked {{ common.likes }} of your projects.</div>
+            <div>
+                {% if common.tags %}
+                    Also blogs about <i>{{ ', '.join(common.tags) }}.</i>
+                {% else %}
+                    Hasn't blogged about any of the same tags.
+                {% endif %}
+            </div>            
         {% endif %}
+        <h3>Projects:</h3>
+        {% include "display_projects.html" %}
     </div>
     <div class="col-md-4">
         {% if session.username == username %}
@@ -34,16 +36,16 @@
                 <div class="panel-body">
                     <form action="{{ url_for('add_project') }}" method=post>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="title" placeholder="Title" required>
+                            <input type="text" class="form-control" name="title" placeholder="Title/Name" required>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" name="tags" placeholder="Tag,Tag" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="repository" placeholder="Repository" required>
+                            <input type="text" class="form-control" name="repository" placeholder="Github Repository" required>
                         </div>
                         <div class="pull-right">
-                            <button type="submit" class="btn btn-default">Share</button>
+                            <button type="submit" class="btn btn btn-success">Share</button>
                         </div>
                     </form>
                 </div>
@@ -64,7 +66,7 @@
                                 </select>
                             </div>
                             <div class="pull-right">
-                                <button type="submit" class="btn btn-default">Add</button>
+                                <button type="submit" class="btn btn btn-success">Add</button>
                             </div>
                         </form>
                     </div>

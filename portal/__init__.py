@@ -8,7 +8,6 @@ app = Flask(__name__)
 def index():
     projects = get_last_projects()
     users = get_users()
-    print users
     return render_template('index.html', projects=projects, users=users)
 
 @app.route('/register', methods=['GET','POST'])

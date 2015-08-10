@@ -79,7 +79,7 @@ def get_users_languages(email):
 
 def get_users_projects(email):
     query = """
-    MATCH (user:User)-[:PUBLISHED]->(project:Project),
+    MATCH (user:User)-[:PUBLISHED]->(project:Project),          
           (tag:Tag)-[:TAGGED]->(project)
     WHERE user.email = {email}
     RETURN project.id AS id,
