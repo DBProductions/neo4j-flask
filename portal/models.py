@@ -5,7 +5,7 @@ from datetime import datetime
 from passlib.hash import bcrypt
 from py2neo import Graph, Node, Relationship, authenticate
 
-graph = Graph('http://192.168.10.5:7474/db/data/')
+graph = Graph('http://neo4j:neo@192.168.10.5:7474/db/data/')
 
 def timestamp():
     epoch = datetime.utcfromtimestamp(0)
@@ -20,10 +20,10 @@ def get_all_languages(email):
     query = """
     MATCH (language:Languages),
           (user:User)
-    WHERE NOT (language:Languages)<-[:USE]-(user:User) 
+    WHERE NOT (language:Languages)<-[:USE]-(user:User)
     AND user.email = {email}
     RETURN language.id as id,
-           language.name as name    
+           language.name as name
     """
 
     return graph.cypher.execute(query, email=email)
@@ -79,7 +79,7 @@ def get_users_languages(email):
 
 def get_users_projects(email):
     query = """
-    MATCH (user:User)-[:PUBLISHED]->(project:Project),          
+    MATCH (user:User)-[:PUBLISHED]->(project:Project),
           (tag:Tag)-[:TAGGED]->(project)
     WHERE user.email = {email}
     RETURN project.id AS id,
@@ -188,5 +188,3 @@ class User:
         """
 
         return graph.cypher.execute(query, they=email, you=self.email)[0]
-
-
