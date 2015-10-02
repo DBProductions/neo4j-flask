@@ -2,17 +2,17 @@
 {% block body %}
 <h2 class="col-md-offset-1">{{ username }}'s profile</h2>
 {% if session.email %}
-<div class="row">    
+<div class="row">
     <div class="col-md-offset-1 col-md-7">
         <h3>Languages:</h3>
-        {% include "display_languages.html" %}        
+        {% include "partials/display_languages.html" %}
         {% if session.username == username %}
             <h3>Users similar to you:</h3>
             {% for user in similar %}
                 <p><a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a> also tags about <i>{{ ', '.join(user.tags) }}</i></p>
             {% else %}
                 <p>There aren't any users who've set the same tags as you!</p>
-            {% endfor %}            
+            {% endfor %}
         {% else %}
             <br><br>
             <div>{{ username }} has liked {{ common.likes }} of your projects.</div>
@@ -22,10 +22,10 @@
                 {% else %}
                     Hasn't blogged about any of the same tags.
                 {% endif %}
-            </div>            
+            </div>
         {% endif %}
         <h3>Projects:</h3>
-        {% include "display_projects.html" %}
+        {% include "partials/display_projects.html" %}
     </div>
     <div class="col-md-4">
         {% if session.username == username %}
@@ -58,7 +58,7 @@
                     <div class="panel-body">
                         <form action="{{ url_for('add_language') }}" method=post>
                             <div class="form-group">
-                                <select class="form-control" name="language">                    
+                                <select class="form-control" name="language">
                                     <option>---</option>
                                     {% for language in all_languages %}
                                         <option value="{{ language.name }}">{{ language.name }}</option>
@@ -76,5 +76,5 @@
     </div>
 </div>
 {% endif %}
- 
+
 {% endblock %}
