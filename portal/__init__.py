@@ -1,17 +1,20 @@
 #!/usr/bin/env python
+""" lication file """
 from models import User, Language, get_last_projects, get_users, get_users_projects, get_project_likes, get_all_languages, get_users_languages
 from flask import Flask, request, redirect, session, abort, url_for, render_template
 
-app = Flask(__name__)
+APP = Flask(__name__)
 
-@app.route('/')
+@APP.route('/')
 def index():
+    """ index handler """
     projects = get_last_projects()
     users = get_users()
     return render_template('index.html', projects=projects, users=users)
 
-@app.route('/register', methods=['GET','POST'])
+@APP.route('/register', methods=['GET', 'POST'])
 def register():
+    """ register handler """
     error = None
     if request.method == 'POST':
         email = request.form['email']
@@ -29,8 +32,9 @@ def register():
             return redirect(url_for('index'))
     return render_template('register.html', error=error)
 
-@app.route('/login', methods=['GET', 'POST'])
+@APP.route('/login', methods=['GET', 'POST'])
 def login():
+    """ login handler """
     error = None
     if request.method == 'POST':
         email = request.form['email']
@@ -44,20 +48,23 @@ def login():
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
-@app.route('/logout')
+@APP.route('/logout')
 def logout():
+    """ logout handler """
     session.pop('email', None)
     session.pop('username', None)
     return redirect(url_for('index'))
 
-@app.route('/add_language', methods=['POST'])
+@APP.route('/add_language', methods=['POST'])
 def add_language():
+    """ add language handler """
     language = request.form['language']
     User(session['email']).add_language(Language(language).find())
     return redirect(url_for('profile', username=session['username']))
 
-@app.route('/add_project', methods=['POST'])
+@APP.route('/add_project', methods=['POST'])
 def add_project():
+    """ add project handler """
     title = request.form['title']
     tags = request.form['tags']
     repository = request.form['repository']
@@ -72,8 +79,9 @@ def add_project():
     User(session['email']).add_project(title, tags, repository)
     return redirect(url_for('profile', username=session['username']))
 
-@app.route('/like_project/<project_id>')
+@APP.route('/like_project/<project_id>')
 def like_project(project_id):
+    """ like project handler """
     email = session.get('email')
     username = session.get('username')
     if not username:
@@ -81,8 +89,9 @@ def like_project(project_id):
     User(email).like_project(project_id)
     return redirect(request.referrer)
 
-@app.route('/profile/<username>')
+@APP.route('/profile/<username>')
 def profile(username):
+    """ profile handler """
     _user = User(username=username)
     user = _user.find()
     email = user['email']
@@ -112,4 +121,3 @@ def profile(username):
         similar=similar,
         common=common
     )
-

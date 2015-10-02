@@ -1,26 +1,30 @@
 #!/usr/bin/env python
-import os
+""" application models """
+
 import uuid
 from datetime import datetime
 from passlib.hash import bcrypt
-from py2neo import Graph, Node, Relationship, authenticate
+from py2neo import Graph, Node, Relationship
 
 graph = Graph('http://neo4j:neo@192.168.10.5:7474/db/data/')
 
 def timestamp():
+    """ create a timestamp """
     epoch = datetime.utcfromtimestamp(0)
     now = datetime.now()
     delta = now - epoch
     return delta.total_seconds()
 
 def date():
+    """ get formated date """
     return datetime.now().strftime('%F')
 
 def get_all_languages(email):
+    """ get all languages of a specific user """
     query = """
-    MATCH (language:Languages),
+    MATCH (language:Language),
           (user:User)
-    WHERE NOT (language:Languages)<-[:USE]-(user:User)
+    WHERE NOT (language:Language)<-[:USE]-(user:User)
     AND user.email = {email}
     RETURN language.id as id,
            language.name as name
@@ -29,6 +33,7 @@ def get_all_languages(email):
     return graph.cypher.execute(query, email=email)
 
 def get_last_projects():
+    """ get last five projects ordered by date """
     query = """
     MATCH (project:Project {date: {today}}),
           (user:User)-[:PUBLISHED]->(project),
@@ -47,6 +52,7 @@ def get_last_projects():
     return graph.cypher.execute(query, today=date())
 
 def get_users():
+    """ get last five users ordered by username """
     query = """
     MATCH (user:User)-[:PUBLISHED]->(project:Project)
     RETURN user.username AS username
@@ -57,6 +63,7 @@ def get_users():
     return graph.cypher.execute(query, today=date())
 
 def get_project_likes(project):
+    """ get project likes of a project """
     query = """
     MATCH (user:User)-[:LIKED]->(project:Project)
     WHERE project.id = {id}
@@ -66,6 +73,7 @@ def get_project_likes(project):
     return graph.cypher.execute(query, id=project)
 
 def get_users_languages(email):
+    """ get languages of a specific user """
     query = """
     MATCH (user:User)-[:USE]->(language)
     WHERE user.email = {email}
@@ -76,8 +84,8 @@ def get_users_languages(email):
 
     return graph.cypher.execute(query, email=email)
 
-
 def get_users_projects(email):
+    """ get projects of a specific user """
     query = """
     MATCH (user:User)-[:PUBLISHED]->(project:Project),
           (tag:Tag)-[:TAGGED]->(project)
@@ -89,25 +97,29 @@ def get_users_projects(email):
            project.repository AS repository,
            COLLECT(tag.name) AS tags
     ORDER BY timestamp DESC
-    LIMIT 5
     """
 
     return graph.cypher.execute(query, email=email)
 
-class Language:
+class Language(object):
+    """ language object """
     def __init__(self, name):
         self.name = name
 
     def find(self):
-        language = graph.find_one("Languages", "name", self.name)
+        """ find a language by name """
+        language = graph.find_one("Language", "name", self.name)
         return language
 
-class User:
+class User(object):
+    """ user object """
     def __init__(self, email=None, username=None):
+        """ set values """
         self.email = email
         self.username = username
 
     def find(self):
+        """ find a user by email or username """
         user = None
         if self.email:
             user = graph.find_one("User", "email", self.email)
@@ -118,6 +130,7 @@ class User:
         return user
 
     def register(self, password):
+        """ register a new user if not exists """
         if not self.find():
             user = Node("User", email=self.email, username=self.username, password=bcrypt.encrypt(password))
             graph.create(user)
@@ -126,6 +139,7 @@ class User:
             return False
 
     def verify_password(self, password):
+        """ return if password is right """
         user = self.find()
         if user:
             return bcrypt.verify(password, user['password'])
@@ -133,11 +147,13 @@ class User:
             return False
 
     def add_language(self, language):
+        """ create relationship between user and language """
         user = self.find()
         rel = Relationship(user, "USE", language)
         graph.create(rel)
 
     def add_project(self, title, tags, repository):
+        """ create project and create relationship between user and project """
         user = self.find()
         project = Node(
             "Project",
@@ -157,13 +173,14 @@ class User:
             graph.create(rel)
 
     def like_project(self, project_id):
+        """ create relationship between user and project """
         user = self.find()
         project = graph.find_one("Project", "id", project_id)
         graph.create_unique(Relationship(user, "LIKED", project))
 
     def get_similar_users(self):
-        # Find three users who are most similar to the logged-in user
-        # based on tags they've both blogged about.
+        """Find three users who are most similar to the logged-in user
+        based on tags they've both blogged about."""
         query = """
         MATCH (you:User)-[:PUBLISHED]->(:Project)<-[:TAGGED]-(tag:Tag),
               (they:User)-[:PUBLISHED]->(:Project)<-[:TAGGED]-(tag)
@@ -176,8 +193,8 @@ class User:
         return graph.cypher.execute(query, email=self.email)
 
     def get_commonality_of_user(self, email):
-        # Find how many of the logged-in user's posts the other user
-        # has liked and which tags they've both blogged about.
+        """Find how many of the logged-in user's posts the other user
+        has liked and which tags they've both blogged about. """
         query = """
         MATCH (they:User {email:{they}}),
               (you:User {email:{you}})

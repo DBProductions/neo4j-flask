@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+""" main application file """
 import os
-from portal import app
+from portal import APP
 
-port = int(os.environ.get('PORT', 5000))
-app.secret_key = 'A0Zr98j/3asakdjal(&*(ajsdnasdasdhajhdasdr2342'
-app.run(host='0.0.0.0', port=port, debug=True)
+PORT = int(os.environ.get('PORT', 5000))
+APP.secret_key = 'A0Zr98j/3asakdjal(&*(ajsdnasdasdhajhdasdr2342'
+APP.run(host='0.0.0.0', port=PORT, debug=True)
