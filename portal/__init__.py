@@ -1,15 +1,18 @@
 #!/usr/bin/env python
-""" lication file """
-from models import User, Language, get_last_projects, get_users, get_users_projects, get_project_likes, get_all_languages, get_users_languages
+""" application file """
 from flask import Flask, request, redirect, session, abort, url_for, render_template
+from models import queries, user, language
+from py2neo import Graph
 
 APP = Flask(__name__)
+
+graph = Graph('http://neo4j:neo@192.168.10.5:7474/db/data/')
 
 @APP.route('/')
 def index():
     """ index handler """
-    projects = get_last_projects()
-    users = get_users()
+    projects = queries.get_last_projects(graph)
+    users = queries.get_users(graph)
     return render_template('index.html', projects=projects, users=users)
 
 @APP.route('/register', methods=['GET', 'POST'])
@@ -24,7 +27,7 @@ def register():
             error = 'You must send us an email.'
         elif len(password) < 5:
             error = 'Your password must be at least 5 characters.'
-        elif not User(email=email, username=username).register(password):
+        elif not user.User(graph=graph, email=email, username=username).register(password):
             error = 'A user with that email already exists.'
         else:
             session['email'] = email
@@ -39,12 +42,12 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        if not User(email=email).verify_password(password):
+        if not user.User(graph=graph, email=email).verify_password(password):
             error = 'Invalid login.'
         else:
-            user = User(email=email).find()
+            _user = user.User(graph=graph, email=email).find()
             session['email'] = email
-            session['username'] = user['username']
+            session['username'] = _user['username']
             return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
@@ -58,8 +61,8 @@ def logout():
 @APP.route('/add_language', methods=['POST'])
 def add_language():
     """ add language handler """
-    language = request.form['language']
-    User(session['email']).add_language(Language(language).find())
+    _language = request.form['language']
+    user.User(graph, session['email']).add_language(language.Language(graph, _language).find())
     return redirect(url_for('profile', username=session['username']))
 
 @APP.route('/add_project', methods=['POST'])
@@ -76,7 +79,7 @@ def add_project():
     if not repository:
         abort(400, 'You must give your post a repository.')
 
-    User(session['email']).add_project(title, tags, repository)
+    user.User(graph, session['email']).add_project(title, tags, repository)
     return redirect(url_for('profile', username=session['username']))
 
 @APP.route('/like_project/<project_id>')
@@ -86,26 +89,26 @@ def like_project(project_id):
     username = session.get('username')
     if not username:
         abort(400, 'You must be logged in to like a project.')
-    User(email).like_project(project_id)
+    user.User(graph, email).like_project(project_id)
     return redirect(request.referrer)
 
 @APP.route('/profile/<username>')
 def profile(username):
     """ profile handler """
-    _user = User(username=username)
-    user = _user.find()
-    email = user['email']
+    _user = user.User(graph=graph, username=username)
+    curuser = _user.find()
+    email = curuser['email']
 
-    all_languages = get_all_languages(email)
-    languages = get_users_languages(email)
-    projects = get_users_projects(email)
+    all_languages = queries.get_all_languages(graph, email)
+    languages = queries.get_users_languages(graph, email)
+    projects = queries.get_users_projects(graph, email)
 
     similar = []
     common = []
 
     viewer_email = session.get('email')
     if viewer_email:
-        viewer = User(viewer_email)
+        viewer = user.User(graph=graph, email=viewer_email)
         if viewer.email == email:
             similar = viewer.get_similar_users()
         else:
@@ -114,7 +117,7 @@ def profile(username):
     return render_template(
         'profile.html',
         email=email,
-        username=user['username'],
+        username=curuser['username'],
         languages=languages,
         all_languages=all_languages,
         projects=projects,
