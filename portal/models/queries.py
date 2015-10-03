@@ -43,8 +43,19 @@ def get_users(graph):
     """ get last five users ordered by username """
     query = """
     MATCH (user:User)-[:PUBLISHED]->(project:Project)
-    RETURN user.username AS username
+    RETURN collect(distinct user.username) AS username
     ORDER BY username DESC
+    LIMIT 5
+    """
+
+    return graph.cypher.execute(query, today=date())
+
+def get_languages(graph):
+    """ get languages used from users """
+    query = """
+    MATCH (user:User)-[:USE]->(language:Language)
+    RETURN collect(distinct language.name) AS name
+    ORDER BY name DESC
     LIMIT 5
     """
 

@@ -1,5 +1,7 @@
 {% for user in users %}
-    <span class="label label-info"><strong>{{ user.username }}</strong></span>
-    {% else %}
-    <div>There aren't any users!</div>
+    {% for name in user.username %}
+        <span class="label label-info"><strong>{{ name }}</strong></span>
+        {% else %}
+        <div>There aren't any users!</div>
+    {% endfor %}
 {% endfor %}

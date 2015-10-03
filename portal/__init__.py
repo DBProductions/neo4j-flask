@@ -13,7 +13,11 @@ def index():
     """ index handler """
     projects = queries.get_last_projects(graph)
     users = queries.get_users(graph)
-    return render_template('index.html', projects=projects, users=users)
+    languages = queries.get_languages(graph)
+    return render_template('index.html',
+                           projects=projects,
+                           users=users,
+                           languages=languages)
 
 @APP.route('/register', methods=['GET', 'POST'])
 def register():

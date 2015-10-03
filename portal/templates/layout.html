@@ -3,7 +3,7 @@
     <head>
         <title>Your social platform</title>
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/font-awesome.min.css') }}">        
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/style.css') }}">
         <meta name="viewport" content = "width=device-width, initial-scale=1.0">
     </head>
@@ -12,13 +12,13 @@
             <div class="header clearfix">
 		        <nav>
 		            <ul class="nav nav-pills pull-right">
-			            <li role="presentation"><a href="/">Home</a></li>
+			            <li role="presentation"><a href="/"><i class="fa fa-home"></i> Home</a></li>
 			            {% if session.email %}
-			                <li role="presentation"><a href="{{ url_for('profile', username=session.username) }}">Profile</a></li>
-			                <li role="presentation"><a href="/logout">Logout</a></li>
+			                <li role="presentation"><a href="{{ url_for('profile', username=session.username) }}"><i class="fa fa-user"></i> Profile</a></li>
+			                <li role="presentation"><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
 			            {% else %}
-			                <li role="presentation"><a href="/register">Register</a></li>
-			                <li role="presentation"><a href="/login">Login</a></li>
+			                <li role="presentation"><a href="/register"><i class="fa fa-sign-in"></i> Register</a></li>
+			                <li role="presentation"><a href="/login"><i class="fa fa-sign-in"></i> Login</a></li>
 			            {% endif %}
 		            </ul>
 		        </nav>

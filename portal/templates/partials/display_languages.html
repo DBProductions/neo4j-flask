@@ -1,5 +1,15 @@
 {% for language in languages %}
-    <span class="label label-info"><strong>{{ language.name }}</strong></span>
+    {% if request.path == '/' %}
+        {% for name in language.name %}
+            <span class="label label-success"><strong>{{ name }}</strong></span>
+            {% else %}
+            <p>There aren't any languages!</p>
+        {% endfor %}
+    {% endif %}
+    {% if request.path != '/' %}
+        <span class="label label-success"><strong>{{ language.name }}</strong></span>
+    {% endif %}
+
     {% else %}
     <p>There aren't any languages!</p>
 {% endfor %}
