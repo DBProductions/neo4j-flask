@@ -22,6 +22,10 @@ Install the dependencies.
 
     $ pip install -r requirements.txt
 
+### Run Neo4j
+
+    $ docker-compose up
+
 ### Run the application
 
     $ python main.py
