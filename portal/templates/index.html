@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
-<h2 class="col-md-offset-1">Overview</h2>
+<h2 class="col-md-offset-1">Welcome</h2>
 <div class="row">
     {% if session.email %}
         <div class="col-md-offset-1 col-md-7">
@@ -15,7 +15,10 @@
         </div>
     {% else %}
         <div class="col-md-offset-1 col-md-7">
-            <h3>Welcome</h3>
+            <h3>Neo4j together with Flask</h3>
+            <p>This is a simple application which works with a graph database.</p>
+            <p>Simple user management with register, login and logout.</p>
+            <p>Sharing projects and tag them for others.</p>
         </div>
     {% endif %}
 </div>

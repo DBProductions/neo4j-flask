@@ -47,9 +47,12 @@ def login():
         email = request.form['email']
         password = request.form['password']
         if not user.User(graph=graph, email=email).verify_password(password):
-            error = 'Invalid login.'
-        else:
+            if not user.User(graph=graph, username=email).verify_password(password):
+                error = 'Invalid login.'
+        if error ==  None:
             _user = user.User(graph=graph, email=email).find()
+            if _user == None:
+                _user = user.User(graph=graph, username=email).find()
             session['email'] = email
             session['username'] = _user['username']
             return redirect(url_for('index'))

@@ -7,17 +7,17 @@
             {% if request.path == '/' %}
                 by <a href="{{ url_for('profile', username=project.username) }}">{{ project.username }}</a>
             {% endif %}
-            on {{ project.date }}             
+            on {{ project.date }}
             <br>
             {{ project.repository }}
             <br>
-            {% if request.path == '/' %}
+            <!--{% if request.path == '/' %}
                 <div class="pull-right">
                     <a href="{{ url_for('like_project', project_id=project.id) }}"><span class="glyphicon glyphicon-thumbs-up"></span></a>
                 </div>
             {% endif %}
-            <br>
-            <div class="pull-right">                
+            <br>-->
+            <div class="pull-right">
                 <small>{{ ', '.join(project.tags) }}</small>
             </div>
         </div>
