@@ -1,0 +1,7 @@
+neo4j:
+  image: tpires/neo4j
+  env_file: .env
+  cap_add:
+   - SYS_RESOURCE
+  ports:
+   - "7474:7474"

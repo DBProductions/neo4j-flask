@@ -6,7 +6,7 @@ from py2neo import Graph
 
 APP = Flask(__name__)
 
-graph = Graph('http://neo4j:neo@192.168.10.5:7474/db/data/')
+graph = Graph('http://neo4j:neo4j@192.168.99.100:7474/db/data/')
 
 @APP.route('/')
 def index():
