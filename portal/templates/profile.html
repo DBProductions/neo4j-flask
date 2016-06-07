@@ -4,16 +4,27 @@
 {% if session.email %}
 <div class="row">
     <div class="col-md-offset-1 col-md-7">
-        <h3>Languages:</h3>
+        <h3>Languages</h3>
         {% include "partials/display_languages.html" %}
         {% if session.username == username %}
             <h3>Users similar to you:</h3>
+            <h4 class="bg-success">Tags</h4>
             {% for user in similar %}
                 <p>
-                    <span class="label label-info"><a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a></span> also tags about <i>{{ ', '.join(user.tags) }}</i>
+                    <a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a>
+                     - also tags about <i>{{ ', '.join(user.tags) }}</i>
                 </p>
             {% else %}
                 <p>There aren't any users who've set the same tags as you!</p>
+            {% endfor %}
+            <h4 class="bg-success">Languages</h4>
+            {% for user in similar_lang %}
+                <p>
+                    <a href="{{ url_for('profile', username=user.similar_user) }}">{{ user.similar_user }}</a>
+                     - also use <i>{{ ', '.join(user.langs) }}</i>
+                </p>
+            {% else %}
+                <p>There aren't any users who've use the same languages as you!</p>
             {% endfor %}
         {% else %}
             <br><br>
@@ -26,16 +37,23 @@
                 {% endif %}
             </div>
         {% endif %}
-        <h3>Projects:</h3>
+        <h3>Projects</h3>
         {% include "partials/display_projects.html" %}
     </div>
     <div class="col-md-4">
         {% if session.username == username %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Share a project</h3>
-                </div>
-                <div class="panel-body">
+
+            <a class="btn btn-default" role="button" data-toggle="collapse" href="#shareProject" aria-expanded="false" aria-controls="collapseExample">
+                Share a project
+            </a>
+            {% if all_languages|length > 0 %}
+                <a class="btn btn-default" role="button" data-toggle="collapse" href="#addLanguage" aria-expanded="false" aria-controls="collapseExample">
+                    Add language
+                </a>
+            {% endif %}
+            <br><br>
+            <div class="collapse" id="shareProject">
+                <div class="well">
                     <form action="{{ url_for('add_project') }}" method=post>
                         <div class="form-group">
                             <input type="text" class="form-control" name="title" placeholder="Title/Name" required>
@@ -44,20 +62,17 @@
                             <input type="text" class="form-control" name="tags" placeholder="Tag,Tag" required>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="repository" placeholder="Github Repository" required>
+                            <input type="text" class="form-control" name="repository" placeholder="Homepage/Repository URL" required>
                         </div>
-                        <div class="pull-right">
+                        <div class="form-group">
                             <button type="submit" class="btn btn btn-success"><i class="fa fa-share-alt"></i> Share</button>
                         </div>
                     </form>
                 </div>
             </div>
             {% if all_languages|length > 0 %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Add language</h3>
-                    </div>
-                    <div class="panel-body">
+                <div class="collapse" id="addLanguage">
+                    <div class="well">
                         <form action="{{ url_for('add_language') }}" method=post>
                             <div class="form-group">
                                 <select class="form-control" name="language">
@@ -67,7 +82,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="pull-right">
+                            <div class="form-group">
                                 <button type="submit" class="btn btn btn-success"><i class="fa fa-plus"></i> Add</button>
                             </div>
                         </form>

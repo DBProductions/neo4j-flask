@@ -28,10 +28,10 @@ class User(object):
     def find(self):
         """ find a user by email or username """
         user = None
-        if self.email:
+        if self.email != None:
             user = self.graph.find_one("User", "email", self.email)
             #self.username = user['username']
-        elif self.username:
+        elif self.username != None:
             user = self.graph.find_one("User", "username", self.username)
             self.email = user['email']
         return user
@@ -98,6 +98,18 @@ class User(object):
         WITH they, COLLECT(DISTINCT tag.name) AS tags, COUNT(DISTINCT tag) AS len
         ORDER BY len DESC LIMIT 3
         RETURN they.username AS similar_user, tags
+        """
+
+        return self.graph.cypher.execute(query, email=self.email)
+
+    def get_similar_users_lang(self):
+        """Find three users who are most similar to the logged-in user
+        based on languages they've both use."""
+        query = """
+        MATCH (you:User)-[:USE]->(l:Language)<-[:USE]-(u:User)
+        WHERE you.email = {email} AND you <> u
+        WITH u, COLLECT(l.name) as langs
+        RETURN u.username AS similar_user, langs
         """
 
         return self.graph.cypher.execute(query, email=self.email)

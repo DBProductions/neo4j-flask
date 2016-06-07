@@ -26,6 +26,10 @@ Install the dependencies.
 
     $ docker-compose up
 
+### Create some data
+
+    $ python create_data.py
+
 ### Run the application
 
     $ python main.py

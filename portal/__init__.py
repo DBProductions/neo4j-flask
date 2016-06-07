@@ -111,6 +111,7 @@ def profile(username):
     projects = queries.get_users_projects(graph, email)
 
     similar = []
+    similar_lang = []
     common = []
 
     viewer_email = session.get('email')
@@ -118,6 +119,7 @@ def profile(username):
         viewer = user.User(graph=graph, email=viewer_email)
         if viewer.email == email:
             similar = viewer.get_similar_users()
+            similar_lang = viewer.get_similar_users_lang()
         else:
             common = viewer.get_commonality_of_user(email)
 
@@ -129,5 +131,6 @@ def profile(username):
         all_languages=all_languages,
         projects=projects,
         similar=similar,
+        similar_lang=similar_lang,
         common=common
     )
