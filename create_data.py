@@ -20,7 +20,7 @@ languages = [
     "Swift"
 ]
 
-graph = Graph('http://neo4j:neo4j@192.168.99.100:7474/db/data/')
+graph = Graph('http://neo4j:neo4j@127.0.0.1:7474/db/data/')
 
 for i in languages:
     language = graph.find_one("Language", "name", i)

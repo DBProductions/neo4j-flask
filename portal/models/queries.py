@@ -7,6 +7,20 @@ def date():
     """ get formated date """
     return datetime.now().strftime('%F')
 
+def get_project(graph, _id):
+    """ get a project """
+    query = """
+    MATCH (project:Project)
+    WHERE project.id = {id}
+    RETURN project.id AS id,
+           project.date AS date,
+           project.timestamp AS timestamp,
+           project.title AS title,
+           project.repository AS repository
+    """
+
+    return graph.cypher.execute(query, id=_id)
+
 def get_all_languages(graph, email):
     """ get all languages of a specific user """
     query = """

@@ -30,10 +30,12 @@ class User(object):
         user = None
         if self.email != None:
             user = self.graph.find_one("User", "email", self.email)
-            #self.username = user['username']
+            if user:
+                self.username = user['username']
         elif self.username != None:
             user = self.graph.find_one("User", "username", self.username)
-            self.email = user['email']
+            if user:
+                self.email = user['email']
         return user
 
     def register(self, password):

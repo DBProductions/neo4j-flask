@@ -6,7 +6,7 @@ from py2neo import Graph
 
 APP = Flask(__name__)
 
-graph = Graph('http://neo4j:neo4j@192.168.99.100:7474/db/data/')
+graph = Graph('http://neo4j:neo4j@localhost:7474/db/data/')
 
 @APP.route('/')
 def index():
@@ -98,6 +98,15 @@ def like_project(project_id):
         abort(400, 'You must be logged in to like a project.')
     user.User(graph, email).like_project(project_id)
     return redirect(request.referrer)
+
+@APP.route('/projects/<project_id>')
+def project(project_id):
+    """ project handler """
+    project = queries.get_project(graph, project_id)
+    print(project[0]['id'])
+    return render_template(
+        'project.html',
+        project=project)
 
 @APP.route('/profile/<username>')
 def profile(username):
